@@ -1,0 +1,32 @@
+name: Create Draft PR
+
+on:
+  workflow_run:
+    workflows: [Main CI]
+    types: [completed]
+    branches:
+      - "main"
+  workflow_dispatch:
+
+jobs:
+  # Opening a draft PR forces the ./workflows/terraform.yml workflow to run
+  create-draft-pr:
+    runs-on: [ self-hosted, Linux, AWS ]
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'}}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Update input.txt
+        run: |
+          NL=$'\n'
+          LAST_SUCCESS=$(gh run list --workflow main-ci.yml --branch main --jq ".[] | select(.conclusion==\"success\", .status==\"completed\", .headSha)" --json headSha --limit 1)
+          LAST_HASH=$(echo ${LAST_SUCCESS} | jq -r .headSha)
+          echo "variable \"hash\" {$NL  type = string$NL  default = \"prd-$LAST_HASH\"$NL}" > inputs.tf
+        working-directory: ./src
+      - name: Create Draft PR
+        id: create_pr
+        uses: ./.github/actions/create-draft-pr
+        with:
+          branch-prefix: "pr-update"
+          title: "chore(pr-update): Update commit hash for Fargate image"
+          description: "Updates the commit hash used to build the Fargate image, so the image will be built from the latest successful code in the main branch."
