@@ -21,7 +21,7 @@ jobs:
     name: Merge Hash
     runs-on: ubuntu-latest
     needs: empty-step
-    if: ${{ github.event_name == 'pull_request' && startsWith(github.head_ref, 'pr-update/') }}
+
     env:
       PR_NUM: ${{ github.event.number }}
     steps:
