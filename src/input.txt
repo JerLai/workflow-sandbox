@@ -1,1 +1,4 @@
-default = "some test string"
+variable "hash" {
+  type = string
+  default = "prd-2d496fca3ad0078f943bb00fb81f4f51d44d5a90"
+}
