@@ -24,7 +24,7 @@ jobs:
           NL=$'\n'
           LAST_SUCCESS=$(gh run list --workflow main-ci.yml --branch main --jq ".[] | select(.conclusion==\"success\", .status==\"completed\", .headSha)" --json headSha --limit 1)
           LAST_HASH=$(echo ${LAST_SUCCESS} | jq -r .headSha)
-          echo "variable \"hash\" {$NL  type = string$NL  default = \"prd-$LAST_HASH\"$NL}" > inputs.tf
+          echo "variable \"hash\" {$NL  type = string$NL  default = \"prd-$LAST_HASH\"$NL}" > input.txt
         working-directory: ./src
       - name: Create Draft PR
         id: create_pr
