@@ -1,0 +1,21 @@
+name: Main CI
+on:
+  pull_request:
+    paths:
+      - .github/workflows/main-ci.yml
+      - src/**
+  push:
+    branches:
+      - main
+      - release
+    paths:
+      - .github/workflows/main-ci.yml
+      - src/**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Do nothing
+      run: echo "This is a no-op workflow to trigger other workflows."

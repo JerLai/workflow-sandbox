@@ -1,0 +1,9 @@
+# package directories
+node_modules
+
+coverage/
+bin/
+obj/
+.vs/
+.idea/
+.vscode/
